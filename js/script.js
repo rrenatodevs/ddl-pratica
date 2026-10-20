@@ -1,215 +1,198 @@
+// Temas simples e diretos para a dinâmica dos cartões (CREATE, ALTER, TRUNCATE, DROP)
 const THEMES = [
   {
-    id: "loja",
-    name: "Loja (E-Commerce)",
-    tableName: "produtos",
-    column1: "nome",
-    column2: "preco",
-    rows: [
-      ["Camiseta Tech", "89.90"],
-      ["Notebook i7", "4500.00"],
-      ["Mouse Gamer", "150.00"]
-    ],
-    missions: [
-      {
-        title: "Modelagem da Tabela de Catálogo",
-        getDescription: (theme) => `Crie a tabela '${theme.tableName}' garantindo que o preço seja positivo utilizando uma restrição CHECK.`,
-        template: (theme) => `[[CREATE]] TABLE ${theme.tableName} (\n  id INT PRIMARY KEY,\n  ${theme.column1} VARCHAR(100) NOT NULL,\n  ${theme.column2} DECIMAL(10,2) [[CHECK]] (${theme.column2} > 0)\n);`,
-        hints: [
-          "Comando DDL para criar novas tabelas.",
-          "Cláusula de validação e restrição de regras de negócio."
-        ],
-        explanation: "CREATE TABLE define a estrutura e o CHECK garante regras de integridade nos valores dos dados."
-      },
-      {
-        title: "Otimização de Performance (Indexação)",
-        getDescription: (theme) => `O time de infraestrutura solicitou um índice na coluna '${theme.column1}' para acelerar buscas no site.`,
-        template: (theme) => `[[CREATE]] [[INDEX]] idx_prod_nome\nON ${theme.tableName} (${theme.column1});`,
-        hints: [
-          "Comando inicial para criar estruturas secundárias no banco.",
-          "Palavra-chave para criar um índice de busca rápida."
-        ],
-        explanation: "CREATE INDEX otimiza a performance de consultas (SELECT) em colunas de alta busca."
-      },
-      {
-        title: "Evolução do Schema: Código de Barras",
-        getDescription: (theme) => `Adicione o campo 'codigo_barras' obrigatório do tipo VARCHAR(13).`,
-        template: (theme) => `[[ALTER]] TABLE ${theme.tableName}\n  [[ADD]] codigo_barras VARCHAR(13) [[NOT]] NULL;`,
-        hints: [
-          "Comando para alterar estruturas de tabelas existentes.",
-          "Instrução para acrescentar uma nova coluna.",
-          "Palavra complementar de 'NULL' para tornar o campo obrigatório."
-        ],
-        explanation: "ALTER TABLE com ADD expande a estrutura da tabela no banco de dados."
-      },
-      {
-        title: "Limpeza da Base de Testes",
-        getDescription: (theme) => `Esvazie todos os registros da tabela '${theme.tableName}' mantendo a estrutura intacta para o ambiente de produção.`,
-        template: (theme) => `[[TRUNCATE]] TABLE ${theme.tableName};`,
-        hints: [
-          "Comando rápido de DDL para remover todas as linhas sem apagar a tabela."
-        ],
-        explanation: "TRUNCATE remove todos os dados da tabela de forma muito mais performática que DELETE."
-      },
-      {
-        title: "Descarte da Tabela",
-        getDescription: (theme) => `A loja mudou de arquitetura. Remova a tabela '${theme.tableName}' definitivamente do banco de dados.`,
-        template: (theme) => `[[DROP]] TABLE ${theme.tableName};`,
-        hints: [
-          "Comando DDL de destruição de estruturas de banco de dados."
-        ],
-        explanation: "DROP TABLE remove permanentemente a tabela e todos os seus índices e dados associados."
-      }
-    ]
-  },
-  {
-    id: "escola",
-    name: "Escola (Acadêmico)",
-    tableName: "alunos",
-    column1: "nome",
-    column2: "email",
-    rows: [
-      ["Ana Silva", "ana@escola.com"],
-      ["Bruno Lima", "bruno@escola.com"],
-      ["Carla Souza", "carla@escola.com"]
-    ],
-    missions: [
-      {
-        title: "Criação de Alunos com Identificador Único",
-        getDescription: (theme) => `Crie a tabela '${theme.tableName}' garantindo que a coluna '${theme.column2}' não aceite duplicadas.`,
-        template: (theme) => `[[CREATE]] TABLE ${theme.tableName} (\n  id INT PRIMARY KEY,\n  ${theme.column1} VARCHAR(100) NOT NULL,\n  ${theme.column2} VARCHAR(100) [[UNIQUE]]\n);`,
-        hints: [
-          "Comando DDL para criar tabelas.",
-          "Restrição que impede valores duplicados na mesma coluna."
-        ],
-        explanation: "A constraint UNIQUE garante que nenhum email cadastrado seja duplicado."
-      },
-      {
-        title: "Refatoração: Padronização de Colunas",
-        getDescription: (theme) => `A equipe solicitou renomear a coluna '${theme.column1}' para 'nome_completo'.`,
-        template: (theme) => `[[ALTER]] TABLE ${theme.tableName}\n  [[RENAME]] COLUMN ${theme.column1} [[TO]] nome_completo;`,
-        hints: [
-          "Comando para alterar estrutura da tabela.",
-          "Ação de renomear um elemento.",
-          "Palavra de ligação ('para' em inglês)."
-        ],
-        explanation: "RENAME COLUMN permite alterar o nome de atributos sem perder os dados armazenados."
-      },
-      {
-        title: "Adequação à LGPD (Remoção de Dado Sensível)",
-        getDescription: () => "Por conformidade de privacidade, remova a coluna 'email' da tabela de alunos.",
-        template: (theme) => `ALTER TABLE ${theme.tableName}\n  [[DROP]] [[COLUMN]] ${theme.column2};`,
-        hints: [
-          "Comando de remoção/exclusão.",
-          "Identificador de que o alvo a ser removido é uma coluna."
-        ],
-        explanation: "DROP COLUMN apaga permanentemente a coluna especificada e seus dados armazenados."
-      },
-      {
-        title: "Descarte de Estrutura Obsoleta",
-        getDescription: (theme) => `Apague a tabela '${theme.tableName}' do sistema acadêmico antigo.`,
-        template: (theme) => `[[DROP]] TABLE ${theme.tableName};`,
-        hints: [
-          "Comando DDL para remover completamente uma tabela."
-        ],
-        explanation: "DROP TABLE exclui o objeto do banco de dados definitivamente."
-      }
-    ]
-  },
-  {
-    id: "games",
-    name: "Games (Ranking e Logs)",
+    name: "Games",
     tableName: "jogadores",
     column1: "nickname",
     column2: "nivel",
     rows: [
-      ["ShadowHunter", "12"],
-      ["PixelArt", "27"],
-      ["NovaKing", "5"]
+      ["Shadow", "12"],
+      ["Pixel", "27"],
+      ["Nova", "5"]
     ],
     missions: [
       {
-        title: "Sistema de Perfil de Jogadores",
-        getDescription: (theme) => `Crie a tabela '${theme.tableName}' definindo um valor padrão (DEFAULT 1) para o nível inicial do jogador.`,
-        template: (theme) => `[[CREATE]] TABLE ${theme.tableName} (\n  id INT PRIMARY KEY,\n  ${theme.column1} VARCHAR(50) NOT NULL,\n  ${theme.column2} INT [[DEFAULT]] 1\n);`,
+        title: "Criar a tabela de Jogadores",
+        getDescription: (theme) => `SITUAÇÃO: Precisamos criar a nova tabela '${theme.tableName}' no sistema do jogo. Qual comando usamos?`,
+        template: (theme) => `[[CREATE]] TABLE ${theme.tableName} (\n  id INT PRIMARY KEY,\n  ${theme.column1} VARCHAR(100) NOT NULL\n);`,
         hints: [
-          "Comando para criar tabelas.",
-          "Palavra-chave usada para valor padrão quando nenhum é informado no INSERT."
+          "Comando para CRIAR uma nova estrutura (Cartão Verde 🟢)."
         ],
-        explanation: "DEFAULT define o valor padrão que o banco atribui caso o campo não seja preenchido."
+        explanation: "CREATE cria uma nova tabela ou estrutura do zero!"
       },
       {
-        title: "Modelagem de Relacionamento (Foreign Key)",
-        getDescription: (theme) => `Crie uma tabela 'partidas' vinculada aos '${theme.tableName}' via Chave Estrangeira.`,
-        template: (theme) => `CREATE TABLE partidas (\n  id INT PRIMARY KEY,\n  jogador_id INT,\n  [[FOREIGN]] KEY (jogador_id) [[REFERENCES]] ${theme.tableName}(id)\n);`,
+        title: "Adicionar coluna de Nível",
+        getDescription: (theme) => `SITUAÇÃO: A tabela '${theme.tableName}' já existe, mas precisamos adicionar a coluna de '${theme.column2}'. Qual comando usamos?`,
+        template: (theme) => `[[ALTER]] TABLE ${theme.tableName}\n  ADD ${theme.column2} INT;`,
         hints: [
-          "Primeira palavra da restrição de chave estrangeira (Estrangeiro em inglês).",
-          "Palavra que aponta para a tabela pai/origem."
+          "Comando para ALTERAR/MODIFICAR uma tabela que já existe (Cartão Azul 🔵)."
         ],
-        explanation: "FOREIGN KEY e REFERENCES criam a integridade referencial entre tabelas relacionais."
+        explanation: "ALTER modifica uma tabela existente para adicionar, alterar ou remover colunas!"
       },
       {
-        title: "Adição de Restrição Positiva",
-        getDescription: (theme) => `Garanta através de um ALTER TABLE que o '${theme.column2}' não possa ser menor que zero.`,
-        template: (theme) => `[[ALTER]] TABLE ${theme.tableName}\n  [[ADD]] CONSTRAINT chk_nivel [[CHECK]] (${theme.column2} >= 0);`,
-        hints: [
-          "Modificar estrutura existente.",
-          "Instrução para incluir uma nova restrição.",
-          "Restrição que valida expressões lógicas."
-        ],
-        explanation: "Adicionar uma restrição CHECK via ALTER TABLE garante consistência em bases que já estão em execução."
-      },
-      {
-        title: "Reset de Temporada",
-        getDescription: (theme) => `Limpe todos os dados de jogadores para reiniciar o ranking da temporada.`,
+        title: "Resetar os Jogadores (Limpar Tabela)",
+        getDescription: (theme) => `SITUAÇÃO: Queremos apagar todos os registros de jogadores para o novo campeonato, mas queremos MANTER a tabela. Qual comando usamos?`,
         template: (theme) => `[[TRUNCATE]] TABLE ${theme.tableName};`,
         hints: [
-          "Comando para esvaziar rapidamente a tabela."
+          "Comando para LIMPAR/ESVAZIAR todos os registros mantendo a tabela (Cartão Amarelo 🟡)."
         ],
-        explanation: "TRUNCATE limpa a tabela para o início do novo ciclo mantendo as constraints."
+        explanation: "TRUNCATE apaga todos os dados e registros, mas preserva a estrutura da tabela!"
+      },
+      {
+        title: "Excluir a tabela do Jogo antigo",
+        getDescription: (theme) => `SITUAÇÃO: O projeto do jogo foi descontinuado e precisamos EXCLUIR a tabela '${theme.tableName}' inteira. Qual comando usamos?`,
+        template: (theme) => `[[DROP]] TABLE ${theme.tableName};`,
+        hints: [
+          "Comando para DELETAR/EXCLUIR a estrutura inteira sem volta (Cartão Vermelho 🔴)."
+        ],
+        explanation: "DROP exclui a tabela inteira do banco de dados definitivamente!"
       }
     ]
   },
   {
-    id: "hospital",
-    name: "Hospital (Prontuários)",
+    name: "Loja",
+    tableName: "produtos",
+    column1: "nome",
+    column2: "preco",
+    rows: [
+      ["Camiseta", "49.90"],
+      ["Tênis", "199.90"],
+      ["Boné", "29.90"]
+    ],
+    missions: [
+      {
+        title: "Criar o Catálogo de Produtos",
+        getDescription: (theme) => `SITUAÇÃO: Precisamos criar a tabela '${theme.tableName}' para cadastrar nossos itens. Qual comando usamos?`,
+        template: (theme) => `[[CREATE]] TABLE ${theme.tableName} (\n  id INT PRIMARY KEY,\n  ${theme.column1} VARCHAR(100) NOT NULL\n);`,
+        hints: [
+          "Comando para CRIAR a estrutura inicial (Cartão Verde 🟢)."
+        ],
+        explanation: "CREATE cria uma nova tabela!"
+      },
+      {
+        title: "Adicionar coluna de Preço",
+        getDescription: (theme) => `SITUAÇÃO: A tabela de produtos já existe, mas precisamos adicionar a coluna '${theme.column2}'. Qual comando usamos?`,
+        template: (theme) => `[[ALTER]] TABLE ${theme.tableName}\n  ADD ${theme.column2} DECIMAL(10,2);`,
+        hints: [
+          "Comando para MODIFICAR/ALTERAR a tabela (Cartão Azul 🔵)."
+        ],
+        explanation: "ALTER é usado para modificar tabelas já existentes!"
+      },
+      {
+        title: "Limpar o estoque de testes",
+        getDescription: (theme) => `SITUAÇÃO: Queremos apagar todos os produtos cadastrados durante os testes, mas manter a tabela pronta para o uso real. Qual comando usamos?`,
+        template: (theme) => `[[TRUNCATE]] TABLE ${theme.tableName};`,
+        hints: [
+          "Comando para LIMPAR a tabela sem apagá-la (Cartão Amarelo 🟡)."
+        ],
+        explanation: "TRUNCATE esvazia os dados mas mantém a estrutura!"
+      },
+      {
+        title: "Excluir a tabela de Produtos",
+        getDescription: (theme) => `SITUAÇÃO: A loja fechou e a tabela '${theme.tableName}' precisa ser removida do banco. Qual comando usamos?`,
+        template: (theme) => `[[DROP]] TABLE ${theme.tableName};`,
+        hints: [
+          "Comando para EXCLUIR/DELETAR a tabela permanentemente (Cartão Vermelho 🔴)."
+        ],
+        explanation: "DROP remove a estrutura da tabela do banco de dados!"
+      }
+    ]
+  },
+  {
+    name: "Escola",
+    tableName: "alunos",
+    column1: "nome",
+    column2: "email",
+    rows: [
+      ["Ana", "ana@escola.com"],
+      ["Bruno", "bruno@escola.com"],
+      ["Carla", "carla@escola.com"]
+    ],
+    missions: [
+      {
+        title: "Criar o Cadastro de Alunos",
+        getDescription: (theme) => `SITUAÇÃO: Precisamos criar a tabela '${theme.tableName}' na base da escola. Qual comando usamos?`,
+        template: (theme) => `[[CREATE]] TABLE ${theme.tableName} (\n  id INT PRIMARY KEY,\n  ${theme.column1} VARCHAR(100) NOT NULL\n);`,
+        hints: [
+          "Comando para CRIAR uma estrutura (Cartão Verde 🟢)."
+        ],
+        explanation: "CREATE cria uma tabela do zero!"
+      },
+      {
+        title: "Adicionar o Email do Aluno",
+        getDescription: (theme) => `SITUAÇÃO: A tabela '${theme.tableName}' já existe. Agora precisamos incluir a coluna '${theme.column2}'. Qual comando usamos?`,
+        template: (theme) => `[[ALTER]] TABLE ${theme.tableName}\n  ADD ${theme.column2} VARCHAR(100);`,
+        hints: [
+          "Comando para ALTERAR/MODIFICAR a estrutura existente (Cartão Azul 🔵)."
+        ],
+        explanation: "ALTER é o comando para alterar estruturas existentes!"
+      },
+      {
+        title: "Reiniciar cadastros para o Novo Ano",
+        getDescription: (theme) => `SITUAÇÃO: O ano letivo acabou. Queremos apagar todos os alunos cadastrados, mas manter a tabela pronta para os novos alunos. Qual comando usamos?`,
+        template: (theme) => `[[TRUNCATE]] TABLE ${theme.tableName};`,
+        hints: [
+          "Comando para ESVAZIAR/LIMPAR a tabela (Cartão Amarelo 🟡)."
+        ],
+        explanation: "TRUNCATE limpa todos os dados da tabela mantendo sua estrutura!"
+      },
+      {
+        title: "Excluir o banco do sistema antigo",
+        getDescription: (theme) => `SITUAÇÃO: Mudamos de sistema acadêmico e a tabela '${theme.tableName}' não será mais usada. Queremos apagar a tabela inteira. Qual comando usamos?`,
+        template: (theme) => `[[DROP]] TABLE ${theme.tableName};`,
+        hints: [
+          "Comando para EXCLUIR a tabela inteira (Cartão Vermelho 🔴)."
+        ],
+        explanation: "DROP destrói e exclui a tabela permanentemente!"
+      }
+    ]
+  },
+  {
+    name: "Hospital",
     tableName: "pacientes",
     column1: "nome",
     column2: "telefone",
     rows: [
-      ["Marta Rocha", "11 98888-0001"],
-      ["João Mendes", "11 98888-0002"],
-      ["Lia Costa", "11 98888-0003"]
+      ["Marta", "11 90000-0001"],
+      ["João", "11 90000-0002"],
+      ["Lia", "11 90000-0003"]
     ],
     missions: [
       {
-        title: "Tabela de Cadastro Hospitalar",
-        getDescription: (theme) => `Crie a tabela '${theme.tableName}' com campos obrigatórios para recepção de emergência.`,
-        template: (theme) => `[[CREATE]] TABLE ${theme.tableName} (\n  id INT PRIMARY KEY,\n  ${theme.column1} VARCHAR(120) NOT [[NULL]],\n  ${theme.column2} VARCHAR(20)\n);`,
+        title: "Criar Prontuário de Pacientes",
+        getDescription: (theme) => `SITUAÇÃO: Precisamos criar a tabela '${theme.tableName}' para a recepção do hospital. Qual comando usamos?`,
+        template: (theme) => `[[CREATE]] TABLE ${theme.tableName} (\n  id INT PRIMARY KEY,\n  ${theme.column1} VARCHAR(100) NOT NULL\n);`,
         hints: [
-          "Instrução para criar a estrutura.",
-          "Complemento de NOT para obrigar o preenchimento."
+          "Comando para CRIAR tabelas novas (Cartão Verde 🟢)."
         ],
-        explanation: "NOT NULL impede o armazenamento de dados ausentes em colunas críticas."
+        explanation: "CREATE cria novas estruturas de tabela!"
       },
       {
-        title: "Inclusão do Registro Geral (CPF)",
-        getDescription: (theme) => `Adicione a coluna 'cpf' do tipo CHAR(11) com restrição de unicidade na tabela '${theme.tableName}'.`,
-        template: (theme) => `ALTER TABLE ${theme.tableName}\n  [[ADD]] cpf CHAR(11) [[UNIQUE]];`,
+        title: "Adicionar campo de Telefone",
+        getDescription: (theme) => `SITUAÇÃO: A tabela de pacientes já existe, mas precisamos adicionar o '${theme.column2}'. Qual comando usamos?`,
+        template: (theme) => `[[ALTER]] TABLE ${theme.tableName}\n  ADD ${theme.column2} VARCHAR(15);`,
         hints: [
-          "Instrução para acrescentar coluna.",
-          "Garante que cada paciente tenha um CPF exclusivo."
+          "Comando para ALTERAR/MODIFICAR a estrutura (Cartão Azul 🔵)."
         ],
-        explanation: "Campos como CPF exigem restrição UNIQUE para evitar duplicidade de cadastros de pessoas."
+        explanation: "ALTER serve para ajustar e modificar tabelas existentes!"
       },
       {
-        title: "Exclusão da Tabela",
-        getDescription: (theme) => `Apague a tabela '${theme.tableName}' ao migrar para o novo sistema hospitalar.`,
+        title: "Esvaziar lista do dia",
+        getDescription: (theme) => `SITUAÇÃO: No fim do plantão, precisamos apagar todos os pacientes da fila, mantendo a tabela pronta para o dia seguinte. Qual comando usamos?`,
+        template: (theme) => `[[TRUNCATE]] TABLE ${theme.tableName};`,
+        hints: [
+          "Comando para LIMPAR a tabela mantendo a estrutura (Cartão Amarelo 🟡)."
+        ],
+        explanation: "TRUNCATE zera os registros da tabela!"
+      },
+      {
+        title: "Excluir tabela temporária",
+        getDescription: (theme) => `SITUAÇÃO: A triagem de emergência temporária foi fechada. Queremos apagar a tabela '${theme.tableName}' inteira. Qual comando usamos?`,
         template: (theme) => `[[DROP]] TABLE ${theme.tableName};`,
         hints: [
-          "Comando DDL para deletar estruturas completas."
+          "Comando para EXCLUIR/DELETAR a tabela inteira (Cartão Vermelho 🔴)."
         ],
-        explanation: "DROP TABLE remove o objeto do catálogo do banco de dados."
+        explanation: "DROP exclui permanentemente a tabela!"
       }
     ]
   }
@@ -244,8 +227,8 @@ function renderDatabaseView() {
   if (!container) return;
 
   if (!dbState.exists) {
-    const text = currentStep >= (currentTheme ? currentTheme.missions.length : 1)
-      ? `A tabela ${currentTheme ? currentTheme.tableName : ''} foi removida.`
+    const text = currentStep >= 4
+      ? `A tabela ${currentTheme ? currentTheme.tableName : ''} foi removida com DROP.`
       : "Nenhuma tabela criada ainda.";
     container.innerHTML = `<p class="n">${text}</p>`;
     return;
@@ -289,7 +272,6 @@ function buildMissionsUI() {
     let codeHtml = "";
 
     parts.forEach((part, partIndex) => {
-      // Índices ímpares são as lacunas interativas ([[termo]])
       if (partIndex % 2 !== 0) {
         codeHtml += `<input data-answer="${part}" size="${part.length + 2}" aria-label="lacuna" autocomplete="off" spellcheck="false" ${index ? "disabled" : ""}>`;
       } else {
@@ -298,8 +280,8 @@ function buildMissionsUI() {
     });
 
     section.innerHTML = `
-      <h3>Missão ${index + 1}: ${mission.title}</h3>
-      <p>${mission.getDescription(currentTheme)}</p>
+      <h3>Desafio ${index + 1}: ${mission.title}</h3>
+      <p style="font-size: 1.1em; color: #fff;">${mission.getDescription(currentTheme)}</p>
       <pre class="code">${codeHtml}</pre>
       <div class="row">
         <button data-check="${index}" ${index ? "disabled" : ""}>Verificar</button>
@@ -328,8 +310,8 @@ function drawWheel() {
 
     svgContent += `
       <path d="M150 150L${x1} ${y1}A140 140 0 0 1 ${x2} ${y2}Z" fill="${WHEEL_COLORS[i][0]}" stroke="#050505" stroke-width="3"/>
-      <text transform="rotate(${i * 90 + 45} 150 150)" x="150" y="68" text-anchor="middle" font-size="20" font-weight="800" fill="${WHEEL_COLORS[i][1]}">
-        ${theme.name.split(' ')[0]}
+      <text transform="rotate(${i * 90 + 45} 150 150)" x="150" y="68" text-anchor="middle" font-size="22" font-weight="800" fill="${WHEEL_COLORS[i][1]}">
+        ${theme.name}
       </text>
     `;
   });
@@ -340,7 +322,7 @@ function drawWheel() {
 
 function startGame() {
   currentStep = 0;
-  dbState = { exists: false, hasColumn2: true, rows: [] };
+  dbState = { exists: false, hasColumn2: false, rows: [] };
 
   buildMissionsUI();
   renderDatabaseView();
@@ -377,7 +359,7 @@ function spinWheel() {
 
   setTimeout(() => {
     currentTheme = THEMES[themeIndex];
-    slotText.textContent = `Tema: ${currentTheme.name}`;
+    slotText.textContent = `Tema sorteado: ${currentTheme.name}`;
     drawButton.disabled = false;
     drawButton.textContent = "Girar de novo";
     isSpinning = false;
@@ -404,7 +386,7 @@ function handleHint(missionIndex) {
     return;
   }
 
-  feedback.textContent = `Dica para a lacuna ${firstWrongIndex + 1}: ${currentTheme.missions[missionIndex].hints[firstWrongIndex]}`;
+  feedback.textContent = `💡 Dica: ${currentTheme.missions[missionIndex].hints[firstWrongIndex]}`;
   inputs[firstWrongIndex].focus();
 }
 
@@ -423,26 +405,29 @@ function handleCheck(missionIndex) {
 
   if (!isAllCorrect) {
     feedback.className = "fb no";
-    feedback.textContent = "Ainda não. Confira as lacunas em vermelho.";
+    feedback.textContent = "Ainda não! Veja qual cartão corresponde à ação solicitada.";
     return;
   }
 
   feedback.className = "fb ok";
-  feedback.textContent = `Correto! ${currentTheme.missions[missionIndex].explanation}`;
+  feedback.textContent = `✅ Correto! ${currentTheme.missions[missionIndex].explanation}`;
 
   inputs.forEach((input) => (input.disabled = true));
   section.querySelectorAll("button").forEach((btn) => (btn.disabled = true));
   section.className = "m done";
 
-  // Lógica dinâmica de simulação do estado do banco
-  const totalMissions = currentTheme.missions.length;
+  // Atualização simples da visualização do Banco de Dados
   if (missionIndex === 0) {
     dbState.exists = true;
+    dbState.hasColumn2 = false;
+    dbState.rows = currentTheme.rows.map(r => [r[0]]);
+  } else if (missionIndex === 1) {
+    dbState.hasColumn2 = true;
     dbState.rows = currentTheme.rows.slice();
-  } else if (missionIndex === totalMissions - 1) {
-    dbState.exists = false;
-  } else if (currentTheme.missions[missionIndex].title.includes("TRUNCATE") || currentTheme.missions[missionIndex].title.includes("Limpeza")) {
+  } else if (missionIndex === 2) {
     dbState.rows = [];
+  } else if (missionIndex === 3) {
+    dbState.exists = false;
   }
 
   currentStep = missionIndex + 1;
