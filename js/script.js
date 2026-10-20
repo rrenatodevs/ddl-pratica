@@ -1,4 +1,3 @@
-// Temas totalmente heterogêneos com sequências, pontos de partida e lacunas variadas!
 const THEMES = [
   {
     name: "Escola",
@@ -214,7 +213,6 @@ const THEMES = [
   }
 ];
 
-// Cores da roleta: [cor da fatia, cor do texto]
 const WHEEL_COLORS = [
   ["#1B1B1B", "#8DD3F0"],
   ["#8DD3F0", "#050505"],
